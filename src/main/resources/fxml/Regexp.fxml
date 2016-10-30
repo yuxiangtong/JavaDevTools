@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.Object?>
+
+<TabPane maxHeight="-Infinity" 
+         maxWidth="-Infinity" 
+         minHeight="-Infinity" 
+         minWidth="-Infinity" 
+         prefHeight="403.0" 
+         prefWidth="600.0" 
+         tabClosingPolicy="UNAVAILABLE" 
+         xmlns="http://javafx.com/javafx/8" 
+         xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="com.yutong.business.regexp.RegexpController">
+  <tabs>
+    <Tab text="正则表达式">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <TextArea fx:id="cusTextArea" layoutX="14.0" layoutY="14.0" prefHeight="113.0" prefWidth="579.0" promptText="请输入需要匹配的文字" />
+                  <CheckBox fx:id="pattern_CANON_EQ" layoutX="14.0" layoutY="131.0" mnemonicParsing="false" text="CANON_EQ">
+                    <Tooltip text="启用规范等价">
+                    </Tooltip>
+                  </CheckBox>
+                  <CheckBox fx:id="pattern_CASE_INSENSITIVE" layoutX="130.0" layoutY="131.0" mnemonicParsing="false" text="CASE_INSENSITIVE" />
+                  <CheckBox fx:id="pattern_COMMENTS" layoutX="15.0" layoutY="182.0" mnemonicParsing="false" text="COMMENTS" />
+                  <CheckBox fx:id="pattern_DOTALL" layoutX="14.0" layoutY="156.0" mnemonicParsing="false" text="DOTALL" />
+                  <CheckBox fx:id="pattern_LITERAL" layoutX="15.0" layoutY="207.0" mnemonicParsing="false" text="LITERAL" />
+                  <CheckBox fx:id="pattern_MULTILINE" layoutX="130.0" layoutY="182.0" mnemonicParsing="false" text="MULTILINE" />
+                  <CheckBox fx:id="pattern_UNICODE_CASE" layoutX="130.0" layoutY="156.0" mnemonicParsing="false" text="UNICODE_CASE" />
+                  <CheckBox fx:id="pattern_UNIX_LINES" layoutX="130.0" layoutY="207.0" mnemonicParsing="false" text="UNIX_LINES" />
+                  <TextArea fx:id="regexpTextArea" layoutX="14.0" layoutY="233.0" prefHeight="96.0" prefWidth="277.0" promptText="请输入正则表达式" />
+                  <TableView fx:id="regexpResultTableView" layoutX="301.0" layoutY="139.0" prefHeight="223.0" prefWidth="293.0">
+                    <columns>
+                      <TableColumn fx:id="tableColumnIndex" prefWidth="41.0" sortable="false" text="序号" />
+                      <TableColumn fx:id="tableColumnResult" prefWidth="152.0" text="匹配结果" />
+                      <TableColumn fx:id="tableColumnStart" prefWidth="53.0" sortable="false" text="开始" />
+                      <TableColumn fx:id="tableColumnEnd" prefWidth="54.0" sortable="false" text="结束" />
+                    </columns>
+                  </TableView>
+                  <Label fx:id="errorLabel" layoutX="14.0" layoutY="335.0" prefHeight="24.0" prefWidth="184.0" />
+                  <CheckBox fx:id="quickMatchCheckBox" layoutX="220.0" layoutY="335.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="69.0" selected="true" disable="true" text="实时匹配" onAction="#quickMatchCheckBoxAction"/>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="其他">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
