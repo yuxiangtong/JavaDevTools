@@ -1,0 +1,24 @@
+#app-border {
+	-fx-border-color: grey;
+	-fx-border-width: 3.0;
+}
+
+#centerVbox {
+	-fx-border-color: grey;
+	-fx-border-width: 3.0;
+}
+
+AnchorPane{
+    -fx-border-color: grey;
+    -fx-border-width: 3.0;
+}
+
+VBox{
+     -fx-border-color: grey;
+    -fx-border-width: 3.0;
+}
+
+SplitPane{
+    -fx-border-color: green;
+    -fx-border-width: 3.0;
+}

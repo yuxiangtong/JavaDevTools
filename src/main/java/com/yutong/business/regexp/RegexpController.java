@@ -6,11 +6,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import org.apache.commons.lang3.StringUtils;
 import com.yutong.business.regexp.datamodel.RegexpResult;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -18,8 +20,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
 
@@ -30,7 +35,7 @@ public class RegexpController
     private TextArea cusTextArea;
 
     @FXML
-    private TextArea regexpTextArea;
+    private TextField regexpTextField;
 
     @FXML
     private CheckBox pattern_UNIX_LINES;
@@ -115,37 +120,52 @@ public class RegexpController
         tableColumnEnd.setCellValueFactory(new PropertyValueFactory("end"));
 
         // regexpTextArea.setText("^([a-z]{1,})((\\d{1})|(\\d{2})|(\\d{3}))$");
-        
+
+        EventHandler handler = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                // System.out.println("Handling event " + event.getEventType());
+                outResult();
+            }
+        };
+
+        cusTextArea.addEventHandler(KeyEvent.KEY_RELEASED, handler);
+        regexpTextField.addEventHandler(KeyEvent.KEY_RELEASED, handler);
+        pattern_CANON_EQ.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+        pattern_CASE_INSENSITIVE.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                handler);
+        pattern_COMMENTS.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+        pattern_DOTALL.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+        pattern_LITERAL.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+        pattern_MULTILINE.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+        pattern_UNICODE_CASE.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+        pattern_UNIX_LINES.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
 
     }
 
 
-    @FXML
-    private void quickMatchCheckBoxAction(ActionEvent event) {
+    private void outResult() {
         errorLabel.setText("");
         errorLabel.setVisible(false);
-
-        boolean quickMatchCheckBoxFlag = quickMatchCheckBox.isSelected();
-        System.out.println("You clicked me!" + quickMatchCheckBoxFlag);
 
         ObservableList<RegexpResult> regexpResultList =
                 FXCollections.observableArrayList();
 
         try {
             String cusTextAreaText = cusTextArea.getText();
-            String regexpTextAreaText = regexpTextArea.getText();
+            String regexpTextFieldText = regexpTextField.getText();
 
             if (StringUtils.isEmpty(StringUtils.trimToEmpty(cusTextAreaText))) {
                 return;
             }
 
             if (StringUtils
-                    .isEmpty(StringUtils.trimToEmpty(regexpTextAreaText))) {
+                    .isEmpty(StringUtils.trimToEmpty(regexpTextFieldText))) {
                 return;
             }
 
             Pattern pattern =
-                    Pattern.compile(regexpTextAreaText, getRegexFlag());
+                    Pattern.compile(regexpTextFieldText, getRegexFlag());
             Matcher matcher = pattern.matcher(cusTextAreaText);
             int count = 0;
             while (matcher.find()) {
@@ -154,8 +174,15 @@ public class RegexpController
                         matcher.start(), matcher.end()));
             }
         }
-        catch (Exception e) {
-            String errorMessage = e.getMessage();
+        catch (PatternSyntaxException patternSyntaxException) {
+            String errorMessage = patternSyntaxException.toString();
+            errorLabel.setText(errorMessage);
+            errorLabel.setTooltip(new Tooltip(errorMessage));
+            errorLabel.setVisible(true);
+        }
+        catch (Exception exception) {
+            String errorMessage = exception.toString();
+            System.out.println(errorMessage);
             errorLabel.setText(errorMessage);
             errorLabel.setTooltip(new Tooltip(errorMessage));
             errorLabel.setVisible(true);

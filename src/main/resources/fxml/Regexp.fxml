@@ -43,22 +43,22 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" >
             <children>
                 <SplitPane dividerPositions="0.29797979797979796" prefHeight="272.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                  <items>
-                    <AnchorPane minWidth="190">
-                       <padding>
+	              <items>
+	                <AnchorPane minWidth="190">
+	                   <padding>
                                <Insets top="5" right="5" bottom="5" left="5" />
                            </padding>
-                       <children>
-                           <VBox minHeight="40" AnchorPane.rightAnchor="5" AnchorPane.bottomAnchor="5" >
+	                   <children>
+	                       <VBox minHeight="40" AnchorPane.rightAnchor="5" AnchorPane.bottomAnchor="5" >
                                 <Label rotate="20" text="实时匹配,快试试吧!" disable="true">
                                  <font>
                                      <Font size="20.0" />
                                  </font>
                                 </Label>
                             </VBox>
-                           <FlowPane hgap="3" vgap="3" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="3" AnchorPane.leftAnchor="3">
-                              <children>
-                              <CheckBox fx:id="pattern_CANON_EQ" minWidth="130" mnemonicParsing="false" text="CANON_EQ">
+	                       <FlowPane hgap="3" vgap="3" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="3" AnchorPane.leftAnchor="3">
+	                          <children>
+	                          <CheckBox fx:id="pattern_CANON_EQ" minWidth="130" mnemonicParsing="false" text="CANON_EQ">
                                 <Tooltip text="启用规范等价">
                                 </Tooltip>
                               </CheckBox>
@@ -69,24 +69,24 @@
                               <CheckBox fx:id="pattern_MULTILINE" minWidth="130" mnemonicParsing="false" text="MULTILINE" />
                               <CheckBox fx:id="pattern_UNICODE_CASE" minWidth="130" mnemonicParsing="false" text="UNICODE_CASE" />
                               <CheckBox fx:id="pattern_UNIX_LINES" minWidth="130" mnemonicParsing="false" text="UNIX_LINES" />
-                              </children>
-                           </FlowPane>
-                       </children>
-                    </AnchorPane>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                       <TableView fx:id="regexpResultTableView" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="3" AnchorPane.leftAnchor="3" AnchorPane.bottomAnchor="5">
-                        <columns>
-                          <TableColumn fx:id="tableColumnIndex" minWidth="50" text="序号" />
-                          <TableColumn fx:id="tableColumnResult" minWidth="50" text="匹配结果" />
-                          <TableColumn fx:id="tableColumnStart" minWidth="50" text="开始" />
-                          <TableColumn fx:id="tableColumnEnd" minWidth="50" text="结束" />
-                        </columns>
-                        <columnResizePolicy>
+	                          </children>
+	                       </FlowPane>
+	                   </children>
+	                </AnchorPane>
+	                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+	                   <TableView fx:id="regexpResultTableView" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="3" AnchorPane.leftAnchor="3" AnchorPane.bottomAnchor="5">
+	                    <columns>
+	                      <TableColumn fx:id="tableColumnIndex" minWidth="50" text="序号" />
+	                      <TableColumn fx:id="tableColumnResult" minWidth="50" text="匹配结果" />
+	                      <TableColumn fx:id="tableColumnStart" minWidth="50" text="开始" />
+	                      <TableColumn fx:id="tableColumnEnd" minWidth="50" text="结束" />
+	                    </columns>
+	                    <columnResizePolicy>
                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                         </columnResizePolicy>
-                      </TableView>
-                    </AnchorPane>
-                  </items>
+	                  </TableView>
+	                </AnchorPane>
+	              </items>
                 </SplitPane>
                </children>
             </AnchorPane>

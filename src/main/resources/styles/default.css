@@ -1,0 +1,7 @@
+BorderPane{
+    -fx-border-color: green;
+    -fx-border-width: 0.0;
+}
+.clear-border{
+    -fx-border-width: 0.0;
+}
