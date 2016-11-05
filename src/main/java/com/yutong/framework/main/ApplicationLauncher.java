@@ -40,6 +40,8 @@ public class ApplicationLauncher extends Application {
 
         Scene scene = new Scene(root, 730, 560);
         primaryStage.getIcons().add(new Image("/images/Cup_Coffee_Hot_Cafe_Beverage.ico"));
+        primaryStage.setMinWidth(730);
+        primaryStage.setMinHeight(560);
         scene.getStylesheets().add("/styles/default.css");
         /**
          * Finalise the Stage.
