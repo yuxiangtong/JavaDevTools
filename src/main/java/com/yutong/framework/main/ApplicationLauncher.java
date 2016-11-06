@@ -38,10 +38,10 @@ public class ApplicationLauncher extends Application {
         StackPane root = new StackPane();
         root.getChildren().add(tabPane);
 
-        Scene scene = new Scene(root, 730, 560);
+        Scene scene = new Scene(root, 750, 600);
         primaryStage.getIcons().add(new Image("/images/Cup_Coffee_Hot_Cafe_Beverage.ico"));
-        primaryStage.setMinWidth(730);
-        primaryStage.setMinHeight(560);
+        primaryStage.setMinWidth(750);
+        primaryStage.setMinHeight(600);
         scene.getStylesheets().add("/styles/default.css");
         /**
          * Finalise the Stage.

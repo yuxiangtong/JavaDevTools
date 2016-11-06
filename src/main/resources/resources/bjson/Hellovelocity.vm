@@ -1,0 +1,16 @@
+123
+## 我是注释1
+#* 我是注释2 *#
+#** 
+    我是注释3
+*#
+
+#set( $iAmVariable = "good!" )
+Welcome $name to velocity.com
+today is $date.
+#set ($rowId = 1)
+#foreach ($item in $list)
+第$rowId个元素值:$item
+#set ($rowId = $rowId +1)
+#end
+$iAmVariable
