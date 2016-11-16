@@ -110,6 +110,9 @@ public class RegexpController
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Label label = new Label("");
+        regexpResultTableView.setPlaceholder(label);
+        
         tableColumnIndex.setCellValueFactory(new PropertyValueFactory("index"));
 
         tableColumnResult

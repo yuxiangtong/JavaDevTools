@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="530" minWidth="730" 
+    xmlns="http://javafx.com/javafx/8" 
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="com.yutong.business.file.FileOperController"
+    >
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="filePath" layoutX="8.0" layoutY="28.0" prefHeight="31.0" prefWidth="570.0" promptText="请输入文件夹或文件路径" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+            <TextField fx:id="extNames" layoutX="10.0" layoutY="53.0" prefHeight="32.0" prefWidth="580.0" promptText="请需要匹配的文件扩展名,已半角分号进行分割" text=".java;.xml;.vm" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="53.0" />
+            <TableView fx:id="tableView" editable="true" layoutX="14.0" layoutY="100.0" prefHeight="236.0" prefWidth="580.0" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
+              <columns>
+                <TableColumn fx:id="oriTextFieldColumn" minWidth="100.0" prefWidth="75.0" sortable="false" text="原始内容" />
+                <TableColumn fx:id="destTextFieldColumn" minWidth="100.0" prefWidth="75.0" sortable="false" text="目标内容" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <Label fx:id="messageLabel" layoutX="14.0" layoutY="354.0" prefHeight="33.0" prefWidth="407.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+            <Button fx:id="executeButton" layoutX="447.0" layoutY="347.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="139.0" text="执 行" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

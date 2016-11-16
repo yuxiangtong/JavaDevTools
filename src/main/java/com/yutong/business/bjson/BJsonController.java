@@ -73,14 +73,14 @@ public class BJsonController
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject dataJsonObject = jsonArray.getJSONObject(i);
             dataJsonObject.put("_index", (i + 1));
-            dataJsonObject.put("_select", true);
+            dataJsonObject.put("_select", false);
         }
         observableList.addAll(jsonArray);
 
         tableView.setItems(observableList);
 
         /* 2.生成对应button */
-        Map<String, String> buttonMap = new HashMap<String, String>();
+        final Map<String, String> buttonMap = new HashMap<String, String>();
 
         EventHandler handler = new EventHandler<Event>() {
             @Override
@@ -90,7 +90,7 @@ public class BJsonController
                 ObservableList<JSONObject> observableList =
                         tableView.getItems();
 
-                Map<String, Object> map = new HashMap<String, Object>();
+                final Map<String, Object> map = new HashMap<String, Object>();
                 map.put("list", observableList);
                 String vmString = VelocityUtils
                         .contentToString(buttonMap.get(button.getText()), map);
@@ -124,10 +124,9 @@ public class BJsonController
     }
 
 
-    private void addDocumentColumns(TableView<JSONObject> tableView,
+    private void addDocumentColumns(final TableView<JSONObject> tableView,
         String[] columnNames) {
-        TableColumn<JSONObject, Boolean> checkBoxColumn =
-                new TableColumn<JSONObject, Boolean>("选择");
+        TableColumn checkBoxColumn = new TableColumn("选择");
         checkBoxColumn.setSortable(false);
         checkBoxColumn.setCellValueFactory(
                 new PropertyValueFactory<JSONObject, Boolean>("_select"));
@@ -169,7 +168,7 @@ public class BJsonController
         tableView.getColumns().add(indexColumn);
 
         for (int i = 0; i < columnNames.length; i++) {
-            String columnName = columnNames[i];
+            final String columnName = columnNames[i];
             TableColumn tableColumn = new TableColumn(columnName);
             tableColumn.setCellValueFactory(
                     new Callback<TableColumn.CellDataFeatures<JSONObject, String>, ObservableValue<String>>() {
