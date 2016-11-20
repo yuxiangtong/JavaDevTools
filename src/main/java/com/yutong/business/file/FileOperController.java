@@ -1,6 +1,8 @@
 package com.yutong.business.file;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -12,34 +14,46 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
-import javafx.util.Callback;
+import javafx.scene.input.MouseEvent;
 
 
 public class FileOperController
     implements Initializable {
 
     @FXML
-    private TextField filePath;
+    private TextField filePathTextField;
 
     @FXML
-    private TextField extNames;
+    private TextField extNamesTextField;
 
     @FXML
     private TableView tableView;
 
     @FXML
-    private TableColumn oriTextFieldColumn;
+    private TableColumn oriTableColumn;
 
     @FXML
-    private TableColumn destTextFieldColumn;
+    private TableColumn destTableColumn;
+
+    @FXML
+    private TextField oriTextField;
+
+    @FXML
+    private TextField destTextField;
+
+    @FXML
+    private Button editButton;
+
+    @FXML
+    private Button addButton;
+
+    @FXML
+    private Button deleteButton;
 
     @FXML
     private Label messageLabel;
@@ -47,171 +61,153 @@ public class FileOperController
     @FXML
     private Button executeButton;
 
+    private ObservableList<FileReplaceTableResult> resultList =
+            FXCollections.observableArrayList();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Label label = new Label("");
         tableView.setPlaceholder(label);
 
-        // oriTextFieldColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        // destTextFieldColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        oriTableColumn.setCellValueFactory(new PropertyValueFactory("ori"));
+        destTableColumn.setCellValueFactory(new PropertyValueFactory("dest"));
 
-        tableView.setEditable(true);
+        tableView.setItems(resultList);
 
-        Callback<TableColumn, TableCell> cellFactory =
-                new Callback<TableColumn, TableCell>() {
+        ChangeListener<FileReplaceTableResult> changeListener =
+                new ChangeListener<FileReplaceTableResult>() {
                     @Override
-                    public TableCell call(TableColumn p) {
-                        return new EditingCell();
+                    public void changed(
+                        ObservableValue<? extends FileReplaceTableResult> observable,
+                        FileReplaceTableResult oldValue,
+                        FileReplaceTableResult newValue) {
+
+                        if (newValue == null) {
+                            return;
+                        }
+
+                        /* 表中表格后重置内容，启用按钮 */
+                        oriTextField.setText(newValue.getOri());
+                        destTextField.setText(newValue.getDest());
+                        editButton.setDisable(false);
+
+                        /* 启用 删除按钮 */
+                        deleteButton.setDisable(false);
                     }
                 };
 
-        oriTextFieldColumn.setCellValueFactory(
-                new PropertyValueFactory<FileReplaceTableResult, String>(
-                        "ori"));
-        oriTextFieldColumn.setCellFactory(cellFactory);
-        oriTextFieldColumn.setOnEditCommit(
-                new EventHandler<CellEditEvent<FileReplaceTableResult, String>>() {
+        /* 监听表格数据选中的行改变 */
+        tableView.getSelectionModel().selectedItemProperty()
+                .addListener(changeListener);
+
+        editButton.addEventHandler(MouseEvent.MOUSE_RELEASED,
+                new EventHandler<Event>() {
                     @Override
-                    public void handle(
-                        CellEditEvent<FileReplaceTableResult, String> t) {
-                        t.getTableView().getItems()
-                                .get(t.getTablePosition().getRow())
-                                .setOri(t.getNewValue());
+                    public void handle(Event event) {
+                        int selectedIndex = tableView.getSelectionModel()
+                                .getSelectedIndex();
+                        if (selectedIndex >= 0) {
+                            /* 先删除,在增加 */
+                            FileReplaceTableResult tableResult =
+                                    new FileReplaceTableResult(
+                                            oriTextField.getText(),
+                                            destTextField.getText());
+                            tableView.getItems().remove(selectedIndex);
+                            tableView.getItems().add(selectedIndex,
+                                    tableResult);
+                        }
+                        else {
+                            editButton.setDisable(true);
+                        }
                     }
                 });
-
-        // oriTextFieldColumn.setCellFactory(new Callback<TableColumn,
-        // TableCell>() {
-        // @Override
-        // public TableCell call(
-        // TableColumn p) {
-        // return new CheckBoxTableCell();
-        // }
-        // });
-
-        destTextFieldColumn
-                .setCellValueFactory(new PropertyValueFactory("dest"));
-
-        ObservableList<FileReplaceTableResult> resultList =
-                FXCollections.observableArrayList();
-        resultList.add(new FileReplaceTableResult("1", "1"));
-        resultList.add(new FileReplaceTableResult("", ""));
-        resultList.add(new FileReplaceTableResult("", ""));
-        resultList.add(new FileReplaceTableResult("", ""));
-        resultList.add(new FileReplaceTableResult("", ""));
-        resultList.add(new FileReplaceTableResult("", ""));
-        resultList.add(new FileReplaceTableResult("", ""));
-        resultList.add(new FileReplaceTableResult("", ""));
-        resultList.add(new FileReplaceTableResult("", ""));
-        resultList.add(new FileReplaceTableResult("", ""));
-
-        tableView.setItems(resultList);
+        addButton.addEventHandler(MouseEvent.MOUSE_RELEASED,
+                new EventHandler<Event>() {
+                    @Override
+                    public void handle(Event event) {
+                        String oriStr = oriTextField.getText();
+                        String destStr = destTextField.getText();
+                        if ("".equals(oriStr) && "".equals(destStr)) {
+                            return;
+                        }
+                        resultList.add(
+                                new FileReplaceTableResult(oriStr, destStr));
+                        oriTextField.setText("");
+                        destTextField.setText("");
+                    }
+                });
+        deleteButton.addEventHandler(MouseEvent.MOUSE_RELEASED,
+                new EventHandler<Event>() {
+                    @Override
+                    public void handle(Event event) {
+                        int selectedIndex = tableView.getSelectionModel()
+                                .getSelectedIndex();
+                        if (selectedIndex >= 0) {
+                            tableView.getItems().remove(selectedIndex);
+                        }
+                        else {
+                            deleteButton.setDisable(true);
+                        }
+                    }
+                });
 
         EventHandler handler = new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
-                // System.out.println("Handling event " + event.getEventType());
+                messageLabel.setText("");
+                System.out.println("Handling event " + event.getEventType());
+                if (resultList.size() == 0) {
+                    return;
+                }
                 outResult();
             }
         };
-
-        executeButton.addEventHandler(KeyEvent.KEY_RELEASED, handler);
-
+        executeButton.addEventHandler(MouseEvent.MOUSE_RELEASED, handler);
     }
+
+    boolean executeFlag = false;
 
 
     private void outResult() {
         executeButton.setDisable(true);
         messageLabel.setText("执行中...");
-
-        messageLabel.setText("执行完成。");
-        executeButton.setDisable(false);
-
         try {
+            /* 文件路径或文件名称 */
+            String pathName = filePathTextField.getText();
 
+            /* 替换的文件扩展名集合 */
+            List<String> fileExtNameList = new ArrayList<String>();
+            String[] extNameArray = extNamesTextField.getText().split(";");
+            for (int i = 0; i < extNameArray.length; i++) {
+                fileExtNameList.add(extNameArray[i]);
+            }
+
+            /* 替换数据信息集合 */
+            List<ReplaceData> replaceDataList = new ArrayList<ReplaceData>();
+            for (int i = 0; i < resultList.size(); i++) {
+                FileReplaceTableResult tableResult = resultList.get(i);
+                replaceDataList.add(new ReplaceData(tableResult.getOri(),
+                        tableResult.getDest()));
+            }
+
+            ReplaceModle replaceModle = new ReplaceModle(pathName,
+                    fileExtNameList, replaceDataList);
+            FileHandle fileHandle = new FileHandle(replaceModle);
+            fileHandle.replaceHandle();
+            executeFlag = true;
         }
         catch (Exception exception) {
+            executeFlag = false;
             String errorMessage = exception.toString();
             messageLabel.setText(errorMessage);
             messageLabel.setTooltip(new Tooltip(errorMessage));
         }
-    }
-
-    class EditingCell extends TableCell<FileReplaceTableResult, String> {
-
-        private TextField textField;
-
-
-        public EditingCell() {
-        }
-
-
-        @Override
-        public void startEdit() {
-            if (!isEmpty()) {
-                super.startEdit();
-                createTextField();
-                setText(null);
-                setGraphic(textField);
-                textField.selectAll();
+        finally {
+            if (executeFlag) {
+                messageLabel.setText("执行完成");
             }
-        }
-
-
-        @Override
-        public void cancelEdit() {
-            super.cancelEdit();
-
-            setText(getItem());
-            setGraphic(null);
-        }
-
-
-        @Override
-        public void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
-
-            if (empty) {
-                setText(null);
-                setGraphic(null);
-            }
-            else {
-                if (isEditing()) {
-                    if (textField != null) {
-                        textField.setText(getString());
-                    }
-                    setText(null);
-                    setGraphic(textField);
-                }
-                else {
-                    setText(getString());
-                    setGraphic(null);
-                }
-            }
-        }
-
-
-        private void createTextField() {
-            textField = new TextField(getString());
-            textField.setMinWidth(
-                    this.getWidth() - this.getGraphicTextGap() * 2);
-            textField.focusedProperty()
-                    .addListener(new ChangeListener<Boolean>() {
-                        @Override
-                        public void changed(
-                            ObservableValue<? extends Boolean> arg0,
-                            Boolean arg1, Boolean arg2) {
-                            if (!arg2) {
-                                commitEdit(textField.getText());
-                            }
-                        }
-                    });
-        }
-
-
-        private String getString() {
-            return getItem() == null ? "" : getItem().toString();
+            executeButton.setDisable(false);
         }
     }
 
