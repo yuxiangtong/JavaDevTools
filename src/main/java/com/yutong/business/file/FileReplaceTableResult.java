@@ -1,5 +1,6 @@
 package com.yutong.business.file;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 
@@ -9,10 +10,22 @@ public class FileReplaceTableResult {
 
     private SimpleStringProperty dest;
 
+    private SimpleBooleanProperty regex = new SimpleBooleanProperty(false);
+
 
     public FileReplaceTableResult(String ori, String dest) {
         this.ori = new SimpleStringProperty(ori);
         this.dest = new SimpleStringProperty(dest);
+    }
+
+
+    public boolean getRegex() {
+        return regex.get();
+    }
+
+
+    public void setRegex(boolean regex) {
+        this.regex.set(regex);
     }
 
 

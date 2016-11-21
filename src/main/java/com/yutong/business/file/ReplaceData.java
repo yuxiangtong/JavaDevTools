@@ -6,10 +6,23 @@ public class ReplaceData {
 
     private String dest;
 
+    private boolean regex;
 
-    public ReplaceData(String ori, String dest) {
+
+    public ReplaceData(String ori, String dest, boolean regex) {
         this.ori = ori;
         this.dest = dest;
+        this.regex = regex;
+    }
+
+
+    public boolean getRegex() {
+        return regex;
+    }
+
+
+    public void setRegex(boolean regex) {
+        this.regex = regex;
     }
 
 

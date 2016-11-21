@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import com.yutong.framework.widget.CellFactory;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -20,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Callback;
 
 
 public class FileOperController
@@ -69,9 +72,38 @@ public class FileOperController
     public void initialize(URL location, ResourceBundle resources) {
         Label label = new Label("");
         tableView.setPlaceholder(label);
+        
+        tableView.setEditable(true);
 
         oriTableColumn.setCellValueFactory(new PropertyValueFactory("ori"));
         destTableColumn.setCellValueFactory(new PropertyValueFactory("dest"));
+        
+        TableColumn checkBoxColumn = new TableColumn("正则匹配");
+        checkBoxColumn.setSortable(false);
+        checkBoxColumn.setCellValueFactory(
+                new PropertyValueFactory<FileReplaceTableResult, Boolean>("regex"));
+
+        checkBoxColumn.setCellFactory(CellFactory.tableCheckBoxColumn(
+                new Callback<Integer, ObservableValue<Boolean>>() {
+                    @Override
+                    public ObservableValue<Boolean> call(Integer index) {
+                        final FileReplaceTableResult tableResult =
+                                (FileReplaceTableResult) tableView.getItems().get(index);
+                        ObservableValue<Boolean> retval =
+                                new SimpleBooleanProperty(tableResult, "regex",
+                                        tableResult.getRegex());
+                        retval.addListener(new ChangeListener<Boolean>() {
+                            @Override
+                            public void changed(
+                                ObservableValue<? extends Boolean> observable,
+                                Boolean oldValue, Boolean newValue) {
+                                tableResult.setRegex(newValue);;
+                            }
+                        });
+                        return retval;
+                    }
+                }));
+        tableView.getColumns().add(checkBoxColumn);
 
         tableView.setItems(resultList);
 
@@ -188,7 +220,7 @@ public class FileOperController
             for (int i = 0; i < resultList.size(); i++) {
                 FileReplaceTableResult tableResult = resultList.get(i);
                 replaceDataList.add(new ReplaceData(tableResult.getOri(),
-                        tableResult.getDest()));
+                        tableResult.getDest(),tableResult.getRegex()));
             }
 
             ReplaceModle replaceModle = new ReplaceModle(pathName,

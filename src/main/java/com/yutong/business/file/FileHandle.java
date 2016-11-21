@@ -9,9 +9,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -190,14 +192,25 @@ public class FileHandle {
             List<ReplaceData> replaceDataList =
                     replaceModle.getReplaceDataList();
             for (ReplaceData replaceData : replaceDataList) {
-                String olds = replaceData.getOri();
-                String news = replaceData.getDest();
-
-                if (line.indexOf(olds) == -1) {
-                    continue;
+                boolean regex = replaceData.getRegex();
+                String oriString = replaceData.getOri();
+                String destString = replaceData.getDest();
+                if (regex) {
+                    Pattern pattern = Pattern.compile(oriString);
+                    Matcher matcher = pattern.matcher(line);
+                    if (matcher.matches() == false) {
+                        continue;
+                    }
+                    line = matcher.replaceAll(destString);
+                    flag = true;
                 }
-                line = line.replaceAll(olds, news);
-                flag = true;
+                else {
+                    if (line.indexOf(oriString) == -1) {
+                        continue;
+                    }
+                    line = StringUtils.replace(line, oriString, destString);
+                    flag = true;
+                }
             }
             stringBuffer.append(line);
             stringBuffer.append(System.getProperty("line.separator"));
@@ -232,8 +245,17 @@ public class FileHandle {
 
         List<ReplaceData> replaceDataList = replaceModle.getReplaceDataList();
         for (ReplaceData replaceData : replaceDataList) {
-            oldFileName = oldFileName.replaceAll(replaceData.getOri(),
-                    replaceData.getDest());
+            boolean regex = replaceData.getRegex();
+            String oriString = replaceData.getOri();
+            String destString = replaceData.getDest();
+            if (regex) {
+                oldFileName = oldFileName.replaceAll(replaceData.getOri(),
+                        replaceData.getDest());
+            }
+            else {
+                oldFileName =
+                        StringUtils.replace(oldFileName, oriString, destString);
+            }
         }
         newFile = new File(oldFileParentPath + oldFileName);
         boolean flag = file.renameTo(newFile);
@@ -274,7 +296,8 @@ public class FileHandle {
 
     public static void main(String[] args) {
         /* 文件路径或文件名称 */
-        String pathName = "C:\\Users\\tech-winning\\Desktop\\test\\R002360";
+        String pathName =
+                "C:\\Users\\tech-winning\\Desktop\\test\\R002360\\R001250Action.java";
 
         /* 替换的文件扩展名集合 */
         List<String> fileExtNameList = new ArrayList<String>();
@@ -284,8 +307,14 @@ public class FileHandle {
 
         /* 替换数据信息集合 */
         List<ReplaceData> replaceDataList = new ArrayList<ReplaceData>();
-        replaceDataList.add(new ReplaceData("105", "236"));
-        replaceDataList.add(new ReplaceData("236", "105"));
+        replaceDataList
+                .add(new ReplaceData("// ActionHelper helper =", "", false));
+        replaceDataList.add(new ReplaceData(
+                "// WebContextUtil.getActionHelper(webctx.getRequest());", "",
+                false));
+        replaceDataList.add(new ReplaceData(
+                "// helper.validateOfEffectiveAuthenticated(webctx.getRequest());",
+                "", false));
 
         ReplaceModle replaceModle =
                 new ReplaceModle(pathName, fileExtNameList, replaceDataList);
