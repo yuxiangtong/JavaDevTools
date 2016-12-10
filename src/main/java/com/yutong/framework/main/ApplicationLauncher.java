@@ -1,5 +1,7 @@
 package com.yutong.framework.main;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,8 +16,13 @@ import javafx.stage.Stage;
 
 public class ApplicationLauncher extends Application {
 
+    private static Logger logger =
+            LogManager.getLogger(ApplicationLauncher.class);
+
     @Override
     public void start(Stage primaryStage) throws Exception {
+        String encoding = System.getProperty("file.encoding");
+        logger.warn("此 Java 虚拟机的默认 charset:" + encoding);
 
         BorderPane regexpView =
                 FXMLLoader.load(getClass().getResource("/fxml/Regexp.fxml"));
@@ -34,7 +41,7 @@ public class ApplicationLauncher extends Application {
         AnchorPane.setTopAnchor(regexpView, 0d);
 
         tab1.setContent(anchorpane1);
-        
+
         /* 2.文件操作 */
         BorderPane fileOperView =
                 FXMLLoader.load(getClass().getResource("/fxml/FileOper.fxml"));
@@ -50,16 +57,15 @@ public class ApplicationLauncher extends Application {
         AnchorPane.setTopAnchor(fileOperView, 0d);
 
         tab2.setContent(anchorpane2);
-        
 
-        
         tabPane.getTabs().add(tab2);
         tabPane.getTabs().add(tab1);
         StackPane root = new StackPane();
         root.getChildren().add(tabPane);
 
         Scene scene = new Scene(root, 750, 600);
-        primaryStage.getIcons().add(new Image("/images/Cup_Coffee_Hot_Cafe_Beverage.ico"));
+        primaryStage.getIcons()
+                .add(new Image("/images/Cup_Coffee_Hot_Cafe_Beverage.ico"));
         primaryStage.setMinWidth(750);
         primaryStage.setMinHeight(600);
         scene.getStylesheets().add("/styles/default.css");

@@ -3,8 +3,10 @@ package com.yutong.business.file;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -177,10 +179,14 @@ public class FileHandle {
         BufferedWriter bufferedWriter = null;
         String line = null;
         // new FileWriter(path + "t.txt", true) 这里加入true 可以不覆盖原有TXT文件内容 续写
-        bufferedWriter = new BufferedWriter(new FileWriter(newFilePath, true));
+        OutputStreamWriter writerStream = new OutputStreamWriter(
+                new FileOutputStream(newFilePath), "UTF-8");
+        bufferedWriter = new BufferedWriter(writerStream);
 
         // 根据文件路径创建缓冲输入流
-        bufferedReader = new BufferedReader(new FileReader(filePath));
+        InputStreamReader streamReader =
+                new InputStreamReader(new FileInputStream(filePath), "UTF-8");
+        bufferedReader = new BufferedReader(streamReader);
 
         // 循环读取文件的每一行, 对需要修改的行进行修改, 放入缓冲对象中
         int currFileCount = 0;
@@ -198,7 +204,7 @@ public class FileHandle {
                 if (regex) {
                     Pattern pattern = Pattern.compile(oriString);
                     Matcher matcher = pattern.matcher(line);
-                    if (matcher.matches() == false) {
+                    if (matcher.find() == false) {
                         continue;
                     }
                     line = matcher.replaceAll(destString);
@@ -297,7 +303,7 @@ public class FileHandle {
     public static void main(String[] args) {
         /* 文件路径或文件名称 */
         String pathName =
-                "C:\\Users\\tech-winning\\Desktop\\test\\R002360\\R001250Action.java";
+                "C:\\tools\\eclipse-jee-neon-R-win32-x86_64\\workspace\\RuleEngineV4-Web\\src\\cn\\com\\winning\\platform\\rules\\mock\\R001250\\impl\\R001250Action.java";
 
         /* 替换的文件扩展名集合 */
         List<String> fileExtNameList = new ArrayList<String>();
@@ -315,6 +321,7 @@ public class FileHandle {
         replaceDataList.add(new ReplaceData(
                 "// helper.validateOfEffectiveAuthenticated(webctx.getRequest());",
                 "", false));
+        replaceDataList.add(new ReplaceData("[0-9]{2,}", "123", true));
 
         ReplaceModle replaceModle =
                 new ReplaceModle(pathName, fileExtNameList, replaceDataList);
